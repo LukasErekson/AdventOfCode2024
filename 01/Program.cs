@@ -17,3 +17,4 @@ if (File.Exists(inputFileName))
 }
 
 Console.WriteLine($"The total distance between the two lists is: {solution.CalculateDistance()}");
+Console.WriteLine($"The similarity score of the two lists is: {solution.CalculateSimilarityScore()}");

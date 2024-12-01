@@ -69,5 +69,19 @@ namespace _01.Day1
 
             return totalDistance;
         }
+
+        public int CalculateSimilarityScore()
+        {
+            int similarityScore = 0;
+
+            foreach (var locId in LocationIdToFreq1.Keys)
+            {
+                LocationIdToFreq2.TryGetValue(locId, out int secondListFrequency);
+
+                similarityScore += locId * secondListFrequency * LocationIdToFreq1[locId];
+            }
+
+            return similarityScore;
+        }
     }
 }
