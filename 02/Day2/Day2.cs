@@ -3,6 +3,7 @@ namespace _02.Day2;
 public class Day2 : IDay<int, int>
 {
     public int SafeReports { get; set; } = 0;
+    public int SafeReportsWithDampener { get; set; } = 0;
     private readonly string _inputFilePath;
 
     public Day2(string inputFilePath)
@@ -30,24 +31,35 @@ public class Day2 : IDay<int, int>
 
             while ((line = streamReader.ReadLine()) != null)
             {
-                var isSafe = ProcessLine(line);
+                IEnumerable<int> levels = line.Split(' ')
+                    .Select(int.Parse)
+                    .ToList();
+
+                var isSafe = ProcessIsSafe(levels);
                 if (isSafe)
                 {
                     SafeReports++;
+                    SafeReportsWithDampener++;
+                }
+                else
+                {
+                    for (int i = 0; i < levels.Count(); i++)
+                    {
+                        var subSet = levels.ToList();
+                        subSet.RemoveAt(i);
+                        if (ProcessIsSafe(subSet))
+                        {
+                            SafeReportsWithDampener++;
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
 
-    private static bool ProcessLine(string? line)
+    private static bool ProcessIsSafe(IEnumerable<int> levels)
     {
-        if (line == null)
-        {
-            return false;
-        }
-
-        IEnumerable<int> levels = line.Split(' ').ToList().Select(int.Parse);
-
         bool increasing = levels.ElementAt(0) < levels.ElementAt(1);
         int currentIndex = 0;
 
