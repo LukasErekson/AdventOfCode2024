@@ -54,15 +54,20 @@ public class Day2 : IDay<int, int>
         while (currentIndex + 1 < levels.Count())
         {
             var difference = levels.ElementAt(currentIndex + 1) - levels.ElementAt(currentIndex);
-            if (increasing && (difference > 3 || difference < 0))
+            if (increasing)
             {
-                return false;
+                if (difference > 3 || difference <= 0)
+                {
+                    return false;
+                }
             }
-            else if (difference < -3 || difference > 0)
+            else
             {
-                return false;
+                if (difference < -3 || difference >= 0)
+                {
+                    return false;
+                }
             }
-
             currentIndex++;
         }
 
