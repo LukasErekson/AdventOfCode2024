@@ -1,6 +1,6 @@
 ﻿using _01.Day1;
 
-var inputFilePath = "../part_1_input.txt";
+var inputFilePath = "../01/inputs/part_1_input.txt";
 var solution = new Day1(inputFilePath);
 
 Console.WriteLine($"The total distance between the two lists is: {solution.PartOne()}");

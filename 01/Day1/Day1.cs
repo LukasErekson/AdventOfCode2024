@@ -14,7 +14,6 @@ namespace _01.Day1
             BuildDictionaries();
         }
 
-
         public int PartOne()
         {
             return CalculateDistance();
@@ -62,7 +61,6 @@ namespace _01.Day1
             _rightLocationIdToFrequency.TryGetValue(locId2, out int currentCount2);
             _rightLocationIdToFrequency[locId2] = currentCount2 + 1;
         }
-
 
         /// <summary>
         /// Calculate the distance between the left and right location ID lists as determined in
