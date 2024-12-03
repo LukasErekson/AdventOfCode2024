@@ -7,6 +7,7 @@ public class Day3 : IDay<int, int>
 {
     private readonly string _inputFilePath;
     private int partOneSum = 0;
+    private int partTwoSum = 0;
 
     public Day3(string inputFilePath)
     {
@@ -21,7 +22,7 @@ public class Day3 : IDay<int, int>
 
     public int PartTwo()
     {
-        throw new NotImplementedException();
+        return partTwoSum;
     }
 
     private void ReadFile()
@@ -32,6 +33,7 @@ public class Day3 : IDay<int, int>
             string? line;
 
             var regex = new Regex(@"mul\((\d+),(\d+)\)");
+            var regex2 = new Regex(@"(don't\(\))(.*?)mul\((\d+),(\d+)\)(.*?)do\(\)");
 
             while ((line = streamReader.ReadLine()) != null)
             {
@@ -44,6 +46,25 @@ public class Day3 : IDay<int, int>
 
                     partOneSum += int.Parse(firstNum.Value) * int.Parse(secondNum.Value);
                 }
+
+                var matches2 = regex2.Matches(line);
+                foreach (Match match in matches2)
+                {
+                    Console.WriteLine(match);
+                    var mulMatches = regex.Matches(match.ToString());
+
+                    foreach (Match mulMatch in mulMatches)
+                    {
+                        var firstNum = mulMatch.Groups[1];
+                        var secondNum = mulMatch.Groups[2];
+                        // Console.WriteLine($"{firstNum}, {secondNum}");
+
+                        partTwoSum += int.Parse(firstNum.Value) * int.Parse(secondNum.Value);
+                    }
+
+                }
+
+                partTwoSum = partOneSum - partTwoSum;
             }
         }
     }
