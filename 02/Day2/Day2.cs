@@ -14,12 +14,12 @@ public class Day2 : IDay<int, int>
 
     public int PartOne()
     {
-        throw new NotImplementedException();
+        return SafeReports;
     }
 
     public int PartTwo()
     {
-        throw new NotImplementedException();
+        return SafeReportsWithDampener;
     }
 
     private void ProcessData()
