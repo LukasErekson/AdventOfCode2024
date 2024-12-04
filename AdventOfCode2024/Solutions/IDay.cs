@@ -9,4 +9,5 @@ public interface IDay<T, V>
 {
     T PartOne();
     V PartTwo();
+    string Solution();
 }

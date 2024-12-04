@@ -1,8 +1,6 @@
 using System.Text.RegularExpressions;
-using AdventOfCode2024;
 
-namespace _03.Day3;
-
+namespace AdventOfCode2024.Solution._03.Day3;
 public class Day3 : IDay<int, int>
 {
     private readonly string _inputFilePath;
@@ -23,6 +21,11 @@ public class Day3 : IDay<int, int>
     public int PartTwo()
     {
         return partTwoSum;
+    }
+
+    public string Solution()
+    {
+        return $"Accounting for only complete mul() statements, the total is {PartOne()}.\nAccounting only for complete and valid mul() statements, the total is {PartTwo()}.";
     }
 
     private void ReadFile()
@@ -50,14 +53,12 @@ public class Day3 : IDay<int, int>
                 var matches2 = regex2.Matches(line);
                 foreach (Match match in matches2)
                 {
-                    Console.WriteLine(match);
                     var mulMatches = regex.Matches(match.ToString());
 
                     foreach (Match mulMatch in mulMatches)
                     {
                         var firstNum = mulMatch.Groups[1];
                         var secondNum = mulMatch.Groups[2];
-                        // Console.WriteLine($"{firstNum}, {secondNum}");
 
                         partTwoSum += int.Parse(firstNum.Value) * int.Parse(secondNum.Value);
                     }
