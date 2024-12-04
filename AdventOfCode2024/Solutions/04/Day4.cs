@@ -17,6 +17,13 @@ public class Day4 : IDay
             { {1, -1}, {2, -2}, {3, -3} },// Diagonal Down Backward
             { {1, 1}, {2, 2}, {3, 3} } // Diagonal Down Forward
         };
+    private int[,,] _masXIndexOffsets = new int[4, 4, 2]
+        {
+            { { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } },
+            { { 1, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 } },
+            { { 1, -1 }, { -1, 1 }, { 1, 1 }, { -1, -1 } },
+            { { -1, -1 }, { 1, 1 }, { 1, -1 }, { -1, 1 } },
+        };
 
     public Day4(string inputFilePath)
     {
@@ -31,7 +38,7 @@ public class Day4 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        return $"The number of X-'MAS's is: {CountMasX()}.";
     }
 
 
@@ -93,5 +100,51 @@ public class Day4 : IDay
         }
 
         return numXmas;
+    }
+
+    private int CountMasX()
+    {
+        int masXCount = 0;
+        for (int row = 0; row < _wordSearchGrid.Count; row++)
+        {
+            for (int col = 0; col < _wordSearchGrid[0].Length; col++)
+            {
+                if (_wordSearchGrid[row][col] == 'A')
+                {
+                    masXCount += NumMasX(row, col);
+                }
+            }
+        }
+
+        return masXCount;
+    }
+
+    private int NumMasX(int row, int column)
+    {
+        var numMasX = 0;
+        char[] letters = ['M', 'S', 'M', 'S'];
+
+        for (int direction = 0; direction < 4; direction++)
+        {
+            for (int step = 0; step < 4; step++)
+            {
+                int rowOffset = _masXIndexOffsets[direction, step, 0];
+                int colOffset = _masXIndexOffsets[direction, step, 1];
+
+                int checkRow = row + rowOffset;
+                int checkCol = column + colOffset;
+                if (checkRow < 0 || checkRow >= _wordSearchGrid.Count || checkCol >= _wordSearchGrid[0].Length || checkCol < 0 || _wordSearchGrid[checkRow][checkCol] != letters[step])
+                {
+                    break;
+                }
+
+                if (step == 3)
+                {
+                    numMasX++;
+                }
+            }
+        }
+
+        return numMasX;
     }
 }
