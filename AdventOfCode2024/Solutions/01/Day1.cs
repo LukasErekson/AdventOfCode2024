@@ -1,5 +1,5 @@
 namespace AdventOfCode2024.Solution._01.Day1;
-public class Day1 : IDay<int, int>
+public class Day1 : IDay
 {
     private readonly string _inputFilePath;
     private readonly Dictionary<int, int> _leftLocationIdToFrequency = [];
@@ -11,19 +11,14 @@ public class Day1 : IDay<int, int>
         BuildDictionaries();
     }
 
-    public int PartOne()
+    public string PartOne()
     {
-        return CalculateDistance();
+        return $"The total distance between the two lists is: {CalculateDistance()}.";
     }
 
-    public int PartTwo()
+    public string PartTwo()
     {
-        return CalculateSimilarityScore();
-    }
-
-    public string Solution()
-    {
-        return $"The total distance between the two lists is: {PartOne()}.\nThe similarityscore of the two lists is {PartTwo()}.";
+        return $"The similarityscore of the two lists is {CalculateSimilarityScore()}.";
     }
 
     /// <summary>

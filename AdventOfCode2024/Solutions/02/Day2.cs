@@ -1,5 +1,5 @@
 namespace AdventOfCode2024.Solution_02.Day2;
-public class Day2 : IDay<int, int>
+public class Day2 : IDay
 {
     public int SafeReports { get; set; } = 0;
     public int SafeReportsWithDampener { get; set; } = 0;
@@ -11,19 +11,14 @@ public class Day2 : IDay<int, int>
         ProcessData();
     }
 
-    public int PartOne()
+    public string PartOne()
     {
-        return SafeReports;
+        return $"The number of safe reports is {SafeReports}.";
     }
 
-    public int PartTwo()
+    public string PartTwo()
     {
-        return SafeReportsWithDampener;
-    }
-
-    public string Solution()
-    {
-        return $"The number of safe reports is {PartOne()}.\nThe number of safe reports WITH the dampener is {PartTwo()}.";
+        return $"The number of safe reports WITH the dampner is {SafeReportsWithDampener}.";
     }
 
     private void ProcessData()

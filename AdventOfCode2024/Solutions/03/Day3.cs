@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024.Solution._03.Day3;
-public class Day3 : IDay<int, int>
+public class Day3 : IDay
 {
     private readonly string _inputFilePath;
     private int partOneSum = 0;
@@ -13,19 +13,14 @@ public class Day3 : IDay<int, int>
         ReadFile();
     }
 
-    public int PartOne()
+    public string PartOne()
     {
-        return partOneSum;
+        return $"Accounting for only complete mul() statements, the total is {partOneSum}.";
     }
 
-    public int PartTwo()
+    public string PartTwo()
     {
-        return partTwoSum;
-    }
-
-    public string Solution()
-    {
-        return $"Accounting for only complete mul() statements, the total is {PartOne()}.\nAccounting only for complete and valid mul() statements, the total is {PartTwo()}.";
+        return $"Accounting only for complete and valid mul() statements, the total is {partTwoSum}.";
     }
 
     private void ReadFile()
