@@ -1,5 +1,3 @@
-using System;
-
 namespace AdventOfCode2024.Solutions._05;
 
 public class Day5 : IDay
@@ -7,6 +5,8 @@ public class Day5 : IDay
     private readonly string _inputFilePath;
     private Dictionary<string, List<string>> _pageNumberToPredecessors = [];
     private List<string> _pageUpdates = [];
+    private List<string> _validUpdates = [];
+    private List<string> _invalidUpdates = [];
 
     public Day5(string inputFilePath)
     {
@@ -16,12 +16,11 @@ public class Day5 : IDay
 
     public string PartOne()
     {
-        var validUpdates = ValidUpdates();
         var middleNumberSum = 0;
 
-        foreach (var updateList in validUpdates)
+        foreach (var updateList in _validUpdates)
         {
-            middleNumberSum += int.Parse(FindMiddlePageNumber(updateList));
+            middleNumberSum += FindMiddlePageNumber(updateList);
         }
 
         return $"The sum of the middle numbers of the valid updates is {middleNumberSum}.";
@@ -29,7 +28,16 @@ public class Day5 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        var middleNumberSum = 0;
+
+        foreach (var update in _invalidUpdates)
+        {
+            var values = update.Split(',').ToList();
+            values.Sort(new PageOrderer(_pageNumberToPredecessors));
+            middleNumberSum += FindMiddlePageNumber(string.Join(',', values));
+        }
+
+        return $"After sorting, the sum of the middle values for previously invalid updates is {middleNumberSum}";
     }
 
     private void ProcessInput()
@@ -62,13 +70,12 @@ public class Day5 : IDay
                     _pageUpdates.Add(line);
                 }
             }
+            ValidateUpdates();
         }
     }
 
-    private List<string> ValidUpdates()
+    private void ValidateUpdates()
     {
-        List<string> validUpdates = [];
-
         foreach (string updateList in _pageUpdates)
         {
             var validList = true;
@@ -91,17 +98,19 @@ public class Day5 : IDay
 
             if (validList)
             {
-                validUpdates.Add(updateList);
+                _validUpdates.Add(updateList);
+            }
+            else
+            {
+                _invalidUpdates.Add(updateList);
             }
         }
-
-        return validUpdates;
     }
 
-    private static string FindMiddlePageNumber(string update)
+    private int FindMiddlePageNumber(string update)
     {
         string[] updates = update.Split(',');
 
-        return updates[updates.Length / 2];
+        return int.Parse(updates[updates.Length / 2]);
     }
 }
