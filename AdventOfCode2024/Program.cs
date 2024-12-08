@@ -36,24 +36,17 @@ else
 
     IDay buildDay(int dayNumber)
     {
-        switch (dayNumber)
+        return dayNumber switch
         {
-            case 1:
-                return new Day1(inputFileString);
-            case 2:
-                return new Day2(inputFileString);
-            case 3:
-                return new Day3(inputFileString);
-            case 4:
-                return new Day4(inputFileString);
-            case 5:
-                return new Day5(inputFileString);
-            case 6:
-                return new Day6(inputFileString);
-            case 7:
-                return new Day7(inputFileString);
-        }
-        throw new NotImplementedException($"Day {dayNumber} is not implemented yet!");
+            1 => new Day1(inputFileString),
+            2 => new Day2(inputFileString),
+            3 => new Day3(inputFileString),
+            4 => new Day4(inputFileString),
+            5 => new Day5(inputFileString),
+            6 => new Day6(inputFileString),
+            7 => new Day7(inputFileString),
+            _ => throw new NotImplementedException($"Day {dayNumber} is not implemented yet!"),
+        };
     }
     try
     {
