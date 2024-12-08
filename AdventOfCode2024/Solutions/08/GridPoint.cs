@@ -1,6 +1,6 @@
 namespace AdventOfCode2024.Solutions._08;
 
-public class GridPoint(int row, int column)
+public class GridPoint(int row, int column) : IEquatable<GridPoint>
 {
     public int Row { get; set; } = row;
     public int Column { get; set; } = column;
@@ -33,5 +33,10 @@ public class GridPoint(int row, int column)
     public override int GetHashCode()
     {
         return ToString().GetHashCode();
+    }
+
+    public bool Equals(GridPoint? other)
+    {
+        return other is not null && this == other;
     }
 }

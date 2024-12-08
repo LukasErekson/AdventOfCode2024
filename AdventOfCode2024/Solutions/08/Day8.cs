@@ -27,13 +27,12 @@ public class Day8 : IDay
         {
             foreach (var point in _frequencyToAntinode[frequencyChar])
             {
-                if (PointWithinBounds(point) && !uniqueAntinodeLocations.Any(p => p == point))
+                if (PointWithinBounds(point))
                 {
                     uniqueAntinodeLocations.Add(point);
                 }
             }
         }
-
 
         return $"The number of unique locations of antinodes is: {uniqueAntinodeLocations.Count}.";
     }
@@ -92,8 +91,6 @@ public class Day8 : IDay
                 {
                     var point2 = coordinateList[j];
                     var difference = point1 - point2;
-
-                    // Console.WriteLine($"{frequencyChar}: {point1}, {point2}, {difference}, {point2 + difference}, {point1 + difference}.");
 
                     _frequencyToAntinode[frequencyChar].Add(point2 - difference);
                     _frequencyToAntinode[frequencyChar].Add(point1 + difference);
