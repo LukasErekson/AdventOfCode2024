@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2024.Solution._03.Day3;
+namespace AdventOfCode2024.Solutions;
 public class Day3 : IDay
 {
     private readonly string _inputFilePath;

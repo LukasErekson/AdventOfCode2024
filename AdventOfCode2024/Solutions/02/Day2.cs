@@ -1,4 +1,4 @@
-namespace AdventOfCode2024.Solution_02.Day2;
+namespace AdventOfCode2024.Solutions;
 public class Day2 : IDay
 {
     public int SafeReports { get; set; } = 0;

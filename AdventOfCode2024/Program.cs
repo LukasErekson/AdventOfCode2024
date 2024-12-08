@@ -1,10 +1,5 @@
 using AdventOfCode2024;
-using AdventOfCode2024.Solution._01.Day1;
-using AdventOfCode2024.Solution._03.Day3;
-using AdventOfCode2024.Solution_02.Day2;
-using AdventOfCode2024.Solutions._04;
-using AdventOfCode2024.Solutions._05;
-using AdventOfCode2024.Solutions._06;
+using AdventOfCode2024.Solutions;
 
 var completedDays = new List<IDay>()
     {
@@ -14,6 +9,7 @@ var completedDays = new List<IDay>()
         new Day4("./Inputs/04/input_part1.txt"),
         new Day5("./Inputs/05/input.txt"),
         new Day6("./Inputs/06/input.txt"),
+        new Day7("./Inputs/07/input.txt"),
     };
 
 

@@ -1,4 +1,4 @@
-namespace AdventOfCode2024.Solutions._06;
+namespace AdventOfCode2024.Solutions;
 
 public class Guard
 {

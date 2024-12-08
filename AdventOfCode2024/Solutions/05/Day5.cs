@@ -1,4 +1,4 @@
-namespace AdventOfCode2024.Solutions._05;
+namespace AdventOfCode2024.Solutions;
 
 public class Day5 : IDay
 {

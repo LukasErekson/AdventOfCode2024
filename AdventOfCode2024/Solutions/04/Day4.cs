@@ -1,6 +1,4 @@
-using System;
-
-namespace AdventOfCode2024.Solutions._04;
+namespace AdventOfCode2024.Solutions;
 
 public class Day4 : IDay
 {

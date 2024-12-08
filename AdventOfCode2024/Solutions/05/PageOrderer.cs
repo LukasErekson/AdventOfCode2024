@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace AdventOfCode2024.Solutions._05;
+namespace AdventOfCode2024.Solutions;
 public class PageOrderer : StringComparer
 {
     private Dictionary<string, List<string>> _pageNumberToPredecessors = [];
@@ -12,6 +12,11 @@ public class PageOrderer : StringComparer
 
     public override int Compare(string? x, string? y)
     {
+        if (x == null || y == null)
+        {
+            return 0;
+        }
+
         var xEntry = new List<string>();
         var yEntry = new List<string>();
         _pageNumberToPredecessors.TryGetValue(x, out xEntry);

@@ -1,4 +1,4 @@
-namespace AdventOfCode2024.Solution._01.Day1;
+namespace AdventOfCode2024.Solutions;
 public class Day1 : IDay
 {
     private readonly string _inputFilePath;
