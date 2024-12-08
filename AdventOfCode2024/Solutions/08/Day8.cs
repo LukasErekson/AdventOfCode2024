@@ -4,24 +4,24 @@ namespace AdventOfCode2024.Solutions;
 
 public class Day8 : IDay
 {
-    private string _inputFilePath;
+    private readonly string _inputFilePath;
+    private readonly List<string> _frequencyGrid = [];
+    private readonly Tuple<int, int> _gridDimensions;
+
     private Dictionary<char, List<GridPoint>> _frequencyToCoordinates = [];
     private Dictionary<char, HashSet<GridPoint>> _frequencyToNonHarmonicAntinode = [];
     private Dictionary<char, HashSet<GridPoint>> _frequencyToHarmonicAntinode = [];
-    private List<string> _frequencyGrid = [];
-    private readonly Tuple<int, int> _gridDimensions;
 
     public Day8(string inputFileName)
     {
         _inputFilePath = inputFileName;
         ProcessInput();
         _gridDimensions = new Tuple<int, int>(_frequencyGrid.Count, _frequencyGrid[0].Length);
+        FindAntinodes();
     }
 
     public string PartOne()
     {
-        FindAntinodes();
-
         HashSet<GridPoint> uniqueAntinodeLocations = [];
 
         foreach (char frequencyChar in _frequencyToNonHarmonicAntinode.Keys)

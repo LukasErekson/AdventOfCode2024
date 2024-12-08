@@ -2,8 +2,8 @@ namespace AdventOfCode2024.Solutions._08;
 
 public class GridPoint(int row, int column) : IEquatable<GridPoint>
 {
-    public int Row { get; set; } = row;
-    public int Column { get; set; } = column;
+    public int Row { get; } = row;
+    public int Column { get; } = column;
 
     public static GridPoint operator +(GridPoint left, GridPoint right)
     {
@@ -38,5 +38,22 @@ public class GridPoint(int row, int column) : IEquatable<GridPoint>
     public bool Equals(GridPoint? other)
     {
         return other is not null && this == other;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            return Equals((GridPoint)obj);
+        }
+        catch (InvalidCastException)
+        {
+            return false;
+        }
     }
 }
