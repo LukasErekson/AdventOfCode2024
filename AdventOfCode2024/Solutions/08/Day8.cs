@@ -6,7 +6,8 @@ public class Day8 : IDay
 {
     private string _inputFilePath;
     private Dictionary<char, List<GridPoint>> _frequencyToCoordinates = [];
-    private Dictionary<char, HashSet<GridPoint>> _frequencyToAntinode = [];
+    private Dictionary<char, HashSet<GridPoint>> _frequencyToNonHarmonicAntinode = [];
+    private Dictionary<char, HashSet<GridPoint>> _frequencyToHarmonicAntinode = [];
     private List<string> _frequencyGrid = [];
     private readonly Tuple<int, int> _gridDimensions;
 
@@ -23,9 +24,9 @@ public class Day8 : IDay
 
         HashSet<GridPoint> uniqueAntinodeLocations = [];
 
-        foreach (char frequencyChar in _frequencyToAntinode.Keys)
+        foreach (char frequencyChar in _frequencyToNonHarmonicAntinode.Keys)
         {
-            foreach (var point in _frequencyToAntinode[frequencyChar])
+            foreach (var point in _frequencyToNonHarmonicAntinode[frequencyChar])
             {
                 if (PointWithinBounds(point))
                 {
@@ -39,7 +40,19 @@ public class Day8 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        HashSet<GridPoint> uniqueAntinodeLocations = [];
+
+        foreach (char frequencyChar in _frequencyToHarmonicAntinode.Keys)
+        {
+            foreach (var point in _frequencyToHarmonicAntinode[frequencyChar])
+            {
+                if (PointWithinBounds(point))
+                {
+                    uniqueAntinodeLocations.Add(point);
+                }
+            }
+        }
+        return $"The number of unique locations of antinodes with harmonics is: {uniqueAntinodeLocations.Count}.";
     }
 
     private void ProcessInput()
@@ -83,17 +96,39 @@ public class Day8 : IDay
         {
             var coordinateList = _frequencyToCoordinates[frequencyChar];
 
-            _frequencyToAntinode[frequencyChar] = [];
+            _frequencyToNonHarmonicAntinode[frequencyChar] = [];
+            _frequencyToHarmonicAntinode[frequencyChar] = [];
             for (int i = 0; i < coordinateList.Count - 1; i++)
             {
                 var point1 = coordinateList[i];
+                _frequencyToHarmonicAntinode[frequencyChar].Add(point1);
                 for (int j = i + 1; j < coordinateList.Count; j++)
                 {
                     var point2 = coordinateList[j];
+                    _frequencyToHarmonicAntinode[frequencyChar].Add(point2);
+
                     var difference = point1 - point2;
 
-                    _frequencyToAntinode[frequencyChar].Add(point2 - difference);
-                    _frequencyToAntinode[frequencyChar].Add(point1 + difference);
+                    _frequencyToNonHarmonicAntinode[frequencyChar].Add(point2 - difference);
+                    _frequencyToNonHarmonicAntinode[frequencyChar].Add(point1 + difference);
+
+                    var harmonicPoint = point1 + difference;
+
+                    while (PointWithinBounds(harmonicPoint))
+                    {
+                        _frequencyToHarmonicAntinode[frequencyChar].Add(harmonicPoint);
+
+                        harmonicPoint += difference;
+                    }
+
+                    harmonicPoint = point2 - difference;
+
+                    while (PointWithinBounds(harmonicPoint))
+                    {
+                        _frequencyToHarmonicAntinode[frequencyChar].Add(harmonicPoint);
+
+                        harmonicPoint -= difference;
+                    }
                 }
             }
         }
