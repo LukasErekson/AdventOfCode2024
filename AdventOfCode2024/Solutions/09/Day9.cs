@@ -1,5 +1,4 @@
-
-using System.Collections.Immutable;
+using AdventOfCode2024.Solutions._09;
 
 namespace AdventOfCode2024.Solutions;
 
@@ -7,7 +6,8 @@ public class Day9 : IDay
 {
     private readonly string _inputFilePath;
 
-    private readonly List<int?> _fileBlocks = [];
+    private readonly List<int?> _fileBlocksInts = [];
+    private List<FileBlock> _fileBlocks = [];
 
     public Day9(string inputFileString)
     {
@@ -22,7 +22,7 @@ public class Day9 : IDay
 
         for (int i = 0; i < fileBlocksPushedToEnd.Count; i++)
         {
-            if (fileBlocksPushedToEnd[i] is null)
+            if (!fileBlocksPushedToEnd[i].HasValue)
             {
                 continue;
             }
@@ -34,7 +34,26 @@ public class Day9 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        DefragFileBLockList();
+
+        long checksum = 0;
+        var fileBlockAsIntList = new List<int>();
+
+        foreach (var block in _fileBlocks)
+        {
+            var blockValue = block.Id ?? 0;
+
+            for (int i = 0; i < block.BlockSize; i++)
+            {
+                fileBlockAsIntList.Add(blockValue);
+            }
+        }
+
+        for (int i = 0; i < fileBlockAsIntList.Count; i++)
+        {
+            checksum += i * fileBlockAsIntList[i];
+        }
+        return $"The checksum for the defragmented filesystem is {checksum}.";
     }
 
     private void ProcessInput()
@@ -53,8 +72,10 @@ public class Day9 : IDay
                 {
                     for (int i = 0; i < spaceSize; i++)
                     {
-                        _fileBlocks.Add(fileId);
+                        _fileBlocksInts.Add(fileId);
                     }
+
+                    _fileBlocks.Add(new FileBlock(spaceSize.Value, fileId));
 
                     fileId++;
                 }
@@ -62,8 +83,9 @@ public class Day9 : IDay
                 {
                     for (int i = 0; i < spaceSize; i++)
                     {
-                        _fileBlocks.Add(null);
+                        _fileBlocksInts.Add(null);
                     }
+                    _fileBlocks.Add(new FileBlock(spaceSize.Value, null));
                 }
 
                 isFile = !isFile;
@@ -77,7 +99,7 @@ public class Day9 : IDay
 
     private List<int?> PushEmptySpaceToEnd()
     {
-        List<int?> compactFiles = _fileBlocks.ConvertAll(val => val);
+        List<int?> compactFiles = _fileBlocksInts.ConvertAll(val => val);
 
         int leftIndex = 0;
         int rightIndex = compactFiles.Count - 1;
@@ -102,11 +124,60 @@ public class Day9 : IDay
         return compactFiles;
     }
 
+    private void DefragFileBLockList()
+    {
+        var leftIndex = 1;
+        var rightIndex = _fileBlocks.Count - 1;
+
+        while (rightIndex > 1 && _fileBlocks[rightIndex].Id != 0)
+        {
+
+            if (_fileBlocks[rightIndex].Id is null)
+            {
+                rightIndex--;
+                continue;
+            }
+
+            if (leftIndex >= rightIndex)
+            {
+                leftIndex = 0;
+                rightIndex--;
+            }
+
+            if (_fileBlocks[leftIndex].Id != null)
+            {
+                leftIndex++;
+                continue;
+            }
+
+            var blockWithId = _fileBlocks[rightIndex];
+            var emptyBlock = _fileBlocks[leftIndex];
+
+            if (emptyBlock.BlockSize >= blockWithId.BlockSize)
+            {
+                var blockSizeDifference = emptyBlock.BlockSize - blockWithId.BlockSize;
+
+                _fileBlocks[leftIndex] = new FileBlock(blockWithId.BlockSize, blockWithId.Id);
+                var newEmptyBlock = new FileBlock(blockWithId.BlockSize);
+                _fileBlocks[rightIndex] = newEmptyBlock;
+
+                if (blockSizeDifference > 0)
+                {
+                    _fileBlocks.Insert(leftIndex + 1, new FileBlock(blockSizeDifference));
+                }
+                rightIndex--;
+                leftIndex = 0;
+            }
+
+            leftIndex++;
+        }
+    }
+
     public override string ToString()
     {
         var memoryBlockString = "";
 
-        foreach (var block in _fileBlocks)
+        foreach (var block in _fileBlocksInts)
         {
             if (block is null)
             {
@@ -119,17 +190,12 @@ public class Day9 : IDay
         return memoryBlockString;
     }
 
-    public string FileBlockListToString<T>(List<T> list)
+    public string FileBlockListToString(List<FileBlock> list)
     {
         var memoryBlockString = "";
 
-        foreach (var block in _fileBlocks)
+        foreach (var block in list)
         {
-            if (block is null)
-            {
-                memoryBlockString += '.';
-                continue;
-            }
             memoryBlockString += $"({block})";
         }
 
