@@ -18,19 +18,25 @@ public class Day10 : IDay
 
     public string PartOne()
     {
-
         var sumOfScores = 0;
         foreach (var trailHead in _heightToCoordinates[0])
         {
             sumOfScores += ScoreTrailDestinations(trailHead).Count;
         }
 
-        return $"The sum of all the trialhead scores is: {sumOfScores}.";
+        return $"The sum of all the trailhead scores is: {sumOfScores}.";
     }
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        var sumOfRatings = 0;
+
+        foreach (var trailHead in _heightToCoordinates[0])
+        {
+            sumOfRatings += ScoreTrail(trailHead);
+        }
+
+        return $"The sum of all the trailhead scores is: {sumOfRatings}.";
     }
 
     public void ProcessInput()
@@ -116,8 +122,8 @@ public class Day10 : IDay
     {
         return point.Row >= 0
                && point.Column >= 0
-               && point.Row <= _mapDimensions[0]
-               && point.Column <= _mapDimensions[1];
+               && point.Row < _mapDimensions[0]
+               && point.Column < _mapDimensions[1];
     }
 
     private HashSet<GridPoint> BurstAroundPoint(GridPoint origin)
