@@ -6,7 +6,6 @@ namespace AdventOfCode2024.Solutions;
 public class Day10 : IDay
 {
     private readonly string _inputFilePath;
-    private readonly Dictionary<GridPoint, int> _trailHeadsToScore = [];
     private readonly Dictionary<int, HashSet<GridPoint>> _heightToCoordinates = [];
     private readonly int[] _mapDimensions = new int[2];
 
@@ -21,7 +20,7 @@ public class Day10 : IDay
         var sumOfScores = 0;
         foreach (var trailHead in _heightToCoordinates[0])
         {
-            sumOfScores += ScoreTrailDestinations(trailHead).Count;
+            sumOfScores += ScoreTrailHead(trailHead).Count;
         }
 
         return $"The sum of all the trailhead scores is: {sumOfScores}.";
@@ -33,7 +32,7 @@ public class Day10 : IDay
 
         foreach (var trailHead in _heightToCoordinates[0])
         {
-            sumOfRatings += ScoreTrail(trailHead);
+            sumOfRatings += RateTrialHead(trailHead);
         }
 
         return $"The sum of all the trailhead scores is: {sumOfRatings}.";
@@ -79,7 +78,7 @@ public class Day10 : IDay
         }
     }
 
-    private int ScoreTrail(GridPoint point, int currentValue = 0)
+    private int RateTrialHead(GridPoint point, int currentValue = 0)
     {
         var score = 0;
 
@@ -92,13 +91,13 @@ public class Day10 : IDay
 
         foreach (var validMove in nextPoints)
         {
-            score += ScoreTrail(validMove, currentValue + 1);
+            score += RateTrialHead(validMove, currentValue + 1);
         }
 
         return score;
     }
 
-    private HashSet<GridPoint> ScoreTrailDestinations(GridPoint point, int currentValue = 0, HashSet<GridPoint> trailDestinations = null)
+    private HashSet<GridPoint> ScoreTrailHead(GridPoint point, int currentValue = 0, HashSet<GridPoint>? trailDestinations = null)
     {
         trailDestinations ??= [];
 
@@ -108,11 +107,11 @@ public class Day10 : IDay
             return trailDestinations;
         }
 
-        var nextPoints = _heightToCoordinates[currentValue + 1].Intersect(BurstAroundPoint(point));
+        var nextPoints = _heightToCoordinates[currentValue + 1].Intersect(BurstAroundPoint(point).Where(PointWithinBounds));
 
         foreach (var validMove in nextPoints)
         {
-            trailDestinations = trailDestinations.Union(ScoreTrailDestinations(validMove, currentValue + 1, trailDestinations)).ToHashSet();
+            trailDestinations = trailDestinations.Union(ScoreTrailHead(validMove, currentValue + 1, trailDestinations)).ToHashSet();
         }
 
         return trailDestinations;
@@ -139,11 +138,7 @@ public class Day10 : IDay
 
         foreach (var move in burstMoves)
         {
-            var potentialPoint = origin + move;
-            if (PointWithinBounds(potentialPoint))
-            {
-                burstCoordinates.Add(potentialPoint);
-            }
+            burstCoordinates.Add(origin + move);
         }
 
         return burstCoordinates;
