@@ -15,7 +15,7 @@ if (args.Length == 0 || string.Equals(args[0], "all", StringComparison.Invariant
             new Day7("./Inputs/07/input.txt"),
             new Day8("./Inputs/08/input.txt"),
             new Day9("./Inputs/09/input.txt"),
-            new Day10("./Inputs/09/input.txt"),
+            new Day10("./Inputs/10/input.txt"),
         };
 
     for (int day = 0; day < completedDays.Count; day++)

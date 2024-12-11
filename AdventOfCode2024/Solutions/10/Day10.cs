@@ -1,4 +1,4 @@
-
+using InputUtilities;
 using AdventOfCode2024.Solutions._08;
 
 namespace AdventOfCode2024.Solutions;
@@ -35,10 +35,23 @@ public class Day10 : IDay
             sumOfRatings += RateTrialHead(trailHead);
         }
 
-        return $"The sum of all the trailhead scores is: {sumOfRatings}.";
+        return $"The sum of all the trailhead ratings is: {sumOfRatings}.";
     }
 
     public void ProcessInput()
+    {
+        void ProcessChar(char height, int row, int col)
+        {
+            _heightToCoordinates.TryGetValue(height - '0', out var coordinateSet);
+            coordinateSet ??= [];
+            coordinateSet.Add(new GridPoint(row, col));
+            _heightToCoordinates[height - '0'] = coordinateSet;
+        }
+
+        GridInput.ReadIntoGrid(_inputFilePath, ProcessChar, out _mapDimensions[0], out _mapDimensions[1]);
+    }
+
+    public void ProcessInput2()
     {
         if (File.Exists(_inputFilePath))
         {
