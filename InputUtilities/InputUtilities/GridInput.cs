@@ -1,4 +1,4 @@
-﻿namespace InputUtilities;
+﻿namespace Utilities.InputUtilities;
 
 public class GridInput
 {

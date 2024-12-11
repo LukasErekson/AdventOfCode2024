@@ -1,5 +1,5 @@
-using InputUtilities;
 using AdventOfCode2024.Solutions._08;
+using Utilities.InputUtilities;
 
 namespace AdventOfCode2024.Solutions;
 
@@ -42,8 +42,7 @@ public class Day10 : IDay
     {
         void ProcessChar(char height, int row, int col)
         {
-            _heightToCoordinates.TryGetValue(height - '0', out var coordinateSet);
-            coordinateSet ??= [];
+            var coordinateSet = _heightToCoordinates.GetValueOrDefault(height - '0', []);
             coordinateSet.Add(new GridPoint(row, col));
             _heightToCoordinates[height - '0'] = coordinateSet;
         }

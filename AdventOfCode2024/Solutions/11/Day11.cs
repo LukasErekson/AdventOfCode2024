@@ -103,35 +103,20 @@ public class Day11 : IDay
         {
             if (stoneNum == 0)
             {
-                if (!newDictionary.ContainsKey(1))
-                {
-                    newDictionary[1] = 0;
-                }
-                newDictionary[1] = numberToStoneCount[stoneNum];
+                newDictionary[1] = newDictionary.GetValueOrDefault(1, 0) + numberToStoneCount[stoneNum];
             }
             else if (stoneNum.ToString().Length % 2 == 0)
             {
                 var stoneNumString = stoneNum.ToString();
                 var leftNum = long.Parse(stoneNumString[..(stoneNumString.Length / 2)]);
                 var rightNum = long.Parse(stoneNumString[(stoneNumString.Length / 2)..]);
-                if (!newDictionary.ContainsKey(leftNum))
-                {
-                    newDictionary[leftNum] = 0;
-                }
-                if (!newDictionary.ContainsKey(rightNum))
-                {
-                    newDictionary[rightNum] = 0;
-                }
-                newDictionary[leftNum] += numberToStoneCount[stoneNum];
-                newDictionary[rightNum] += numberToStoneCount[stoneNum];
+
+                newDictionary[leftNum] = newDictionary.GetValueOrDefault(leftNum, 0) + numberToStoneCount[stoneNum];
+                newDictionary[rightNum] = newDictionary.GetValueOrDefault(rightNum, 0) + numberToStoneCount[stoneNum];
             }
             else
             {
-                if (!newDictionary.ContainsKey(stoneNum * 2024))
-                {
-                    newDictionary[stoneNum * 2024] = 0;
-                }
-                newDictionary[stoneNum * 2024] += numberToStoneCount[stoneNum];
+                newDictionary[stoneNum * 2024] = newDictionary.GetValueOrDefault(stoneNum * 2024, 0) + numberToStoneCount[stoneNum];
             }
         }
 

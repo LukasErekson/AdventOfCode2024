@@ -1,4 +1,5 @@
 using AdventOfCode2024.Solutions._06;
+using Utilities.InputUtilities;
 
 namespace AdventOfCode2024.Solutions;
 
@@ -7,6 +8,7 @@ public class Day6 : IDay
     private readonly string _inputFilePath;
     private readonly List<char[]> _map = [];
     private readonly int[] _guardStartingPosition = new int[2];
+    private readonly int[] _mapBoundaries = new int[2];
     private char _guardStartingDirection;
 
     private Guard _guard = new(0, 0, '^');
@@ -33,30 +35,27 @@ public class Day6 : IDay
 
     private void ProcessInput()
     {
-        if (File.Exists(_inputFilePath))
+        string rowString = "";
+        void processChar(char c, int row, int col)
         {
-            using var streamReader = new StreamReader(_inputFilePath);
-            string? row;
-
-            while ((row = streamReader.ReadLine()) != null)
+            if (col == 0)
             {
-                var charRow = row.ToCharArray();
-                // Add the guard
-                var guardInRow = Guard.GuardChars.Intersect(row);
-                if (guardInRow.Count() == 1)
-                {
-                    var column = row.IndexOf(guardInRow.First());
-                    _guard = new Guard(row: _map.Count, column: column, guardInRow.First());
-                    // charRow[column] = '.';
-                    _guardStartingPosition[0] = _map.Count;
-                    _guardStartingPosition[1] = column;
-                    _guardStartingDirection = guardInRow.First();
-                }
-
-                // Build the map
-                _map.Add(charRow);
+                _map.Add(rowString.ToCharArray());
+                rowString = "";
             }
+
+            if (Guard.GuardChars.Contains(c))
+            {
+                _guard = new Guard(row, col, c);
+                _guardStartingPosition[0] = row;
+                _guardStartingPosition[1] = col;
+                _guardStartingDirection = c;
+            }
+            rowString += c;
         }
+        GridInput.ReadByCharAndOutputBoundaries(_inputFilePath, processChar, out _mapBoundaries[0], out _mapBoundaries[1]);
+        _map.Add(rowString.ToCharArray());
+        _map.RemoveAt(0);
     }
 
     private bool Step(List<char[]> mapToTraverse)
@@ -64,7 +63,7 @@ public class Day6 : IDay
         var nextMove = _guard.NextMove();
         var guardPositionTuple = new Tuple<int, int>(_guard.Position[0], _guard.Position[1]);
 
-        bool isNextMoveExit = nextMove[0] <= -1 || nextMove[1] <= -1 || nextMove[0] >= mapToTraverse.Count || nextMove[1] >= mapToTraverse[0].Length;
+        bool isNextMoveExit = nextMove[0] <= -1 || nextMove[1] <= -1 || nextMove[0] >= _mapBoundaries[0] || nextMove[1] >= _mapBoundaries[1];
         bool guardCanMove = isNextMoveExit || mapToTraverse[nextMove[0]][nextMove[1]] != '#';
 
         while (!guardCanMove)
@@ -85,8 +84,7 @@ public class Day6 : IDay
 
         if (!_positionsVisited.Add(guardPositionTuple))
         {
-            _doubleVisitedLocationsToDirections.TryGetValue(guardPositionTuple, out var visitedLocationDirection);
-            visitedLocationDirection ??= [];
+            var visitedLocationDirection = _doubleVisitedLocationsToDirections.GetValueOrDefault(guardPositionTuple, []);
             visitedLocationDirection.Add(_guard.GuardDirection);
             _doubleVisitedLocationsToDirections[guardPositionTuple] = visitedLocationDirection;
         }
@@ -143,6 +141,7 @@ public class Day6 : IDay
         }
 
         mapAsString += $"\n{_guard.Position[0]}, {_guard.Position[1]}, {_guard.GuardDirection}\n";
+        mapAsString += $"Map Dimensions: {_mapBoundaries[0]}, {_mapBoundaries[1]}";
 
         return mapAsString;
     }
