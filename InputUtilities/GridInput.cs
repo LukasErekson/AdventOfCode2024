@@ -3,10 +3,10 @@
 public class GridInput
 {
 
-    public static void ReadByCharAndOutputBoundaries(string inputFilePath, Action<char, int, int> processChar, out int row, out int col)
+    public static void ReadByCharAndOutputBoundaries(string inputFilePath, Action<char, int, int> processChar, out int rowCount, out int columnCount)
     {
-        row = 0;
-        col = 0;
+        rowCount = 0;
+        columnCount = 0;
         if (File.Exists(inputFilePath))
         {
             using var streamReader = new StreamReader(inputFilePath);
@@ -24,7 +24,7 @@ public class GridInput
                 if (value == '\n')
                 {
                     currentRow++;
-                    col = currentColumn;
+                    columnCount = currentColumn;
                     currentColumn = 0;
                     continue;
                 }
@@ -34,7 +34,7 @@ public class GridInput
                 currentColumn++;
             }
 
-            row = currentRow + 1;
+            rowCount = currentRow + 1;
         }
         else
         {
