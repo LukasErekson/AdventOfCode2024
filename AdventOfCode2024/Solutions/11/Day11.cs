@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace AdventOfCode2024.Solutions;
 
 public class Day11 : IDay
@@ -28,7 +30,42 @@ public class Day11 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        List<List<long>> numberedStonesCopy = [_numberedStones.ConvertAll(n => n)];
+        int numBlinks = 25;
+        for (int i = 0; i < numBlinks; i++)
+        {
+            Console.WriteLine($"Working on chunk # {i + 1}");
+            List<List<long>> replacementList = [];
+            foreach (var smallerList in numberedStonesCopy)
+            {
+                List<List<long>> newList = [];
+                _ = Parallel.ForEach(smallerList.Chunk(1000),
+                    new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = Environment.ProcessorCount
+                    },
+                    chunk =>
+                    {
+                        var chunkList = chunk.ToList();
+                        Blink(chunkList);
+                        newList.Add(chunkList);
+                    });
+                foreach (var list in newList)
+                {
+                    replacementList.Add(list);
+                }
+            }
+            numberedStonesCopy = replacementList;
+        }
+
+        BigInteger sum = 0;
+
+        foreach (var list in numberedStonesCopy)
+        {
+            sum += list.Count;
+        }
+
+        return $"After {numBlinks} blinks, there are {sum} stones.";
     }
 
     private void ProcessInput()
@@ -49,7 +86,7 @@ public class Day11 : IDay
         }
     }
 
-    private static void Blink(List<long> numberedStones)
+    private static List<long> Blink(List<long> numberedStones)
     {
         List<long> listCopy = numberedStones.ConvertAll(n => n);
         int numberedStonesIndex = 0;
@@ -77,6 +114,8 @@ public class Day11 : IDay
             }
             numberedStonesIndex++;
         }
+
+        return numberedStones;
     }
 
     private static string RockListToString(List<long> numberedStones)
