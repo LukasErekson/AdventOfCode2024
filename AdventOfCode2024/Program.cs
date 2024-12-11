@@ -16,6 +16,7 @@ if (args.Length == 0 || string.Equals(args[0], "all", StringComparison.Invariant
             new Day8("./Inputs/08/input.txt"),
             new Day9("./Inputs/09/input.txt"),
             new Day10("./Inputs/10/input.txt"),
+            new Day11("./Inputs/11/input.txt"),
         };
 
     for (int day = 0; day < completedDays.Count; day++)
@@ -51,6 +52,7 @@ else
             8 => new Day8(inputFileString),
             9 => new Day9(inputFileString),
             10 => new Day10(inputFileString),
+            11 => new Day11(inputFileString),
             _ => throw new NotImplementedException($"Day {dayNumber} is not implemented yet!"),
         };
     }
