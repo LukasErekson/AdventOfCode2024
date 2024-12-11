@@ -17,12 +17,10 @@ public class Day11 : IDay
     {
         var numberedStonesCopy = _numberedStones.ConvertAll(n => n);
         int numBlinks = 25;
-        // Console.WriteLine();
-        // Console.WriteLine(RockListToString(numberedStonesCopy));
+
         for (int i = 0; i < numBlinks; i++)
         {
             Blink(numberedStonesCopy);
-            // Console.WriteLine(RockListToString(numberedStonesCopy));
         }
 
         return $"After {numBlinks} blinks, there are {numberedStonesCopy.Count} stones.";
@@ -30,41 +28,20 @@ public class Day11 : IDay
 
     public string PartTwo()
     {
-        List<List<long>> numberedStonesCopy = [_numberedStones.ConvertAll(n => n)];
-        int numBlinks = 25;
+        Dictionary<long, long> numberToStoneCount = _numberedStones.ToDictionary(number => number, number => (long)1);
+
+        int numBlinks = 75;
+        long sum = 0;
         for (int i = 0; i < numBlinks; i++)
         {
-            Console.WriteLine($"Working on chunk # {i + 1}");
-            List<List<long>> replacementList = [];
-            foreach (var smallerList in numberedStonesCopy)
-            {
-                List<List<long>> newList = [];
-                _ = Parallel.ForEach(smallerList.Chunk(1000),
-                    new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = Environment.ProcessorCount
-                    },
-                    chunk =>
-                    {
-                        var chunkList = chunk.ToList();
-                        Blink(chunkList);
-                        newList.Add(chunkList);
-                    });
-                foreach (var list in newList)
-                {
-                    replacementList.Add(list);
-                }
-            }
-            numberedStonesCopy = replacementList;
+            Console.WriteLine($"Working on blink# {i + 1}");
+            numberToStoneCount = BlinkWithDictionary(numberToStoneCount);
         }
 
-        BigInteger sum = 0;
-
-        foreach (var list in numberedStonesCopy)
+        foreach (var count in numberToStoneCount.Keys)
         {
-            sum += list.Count;
+            sum += numberToStoneCount[count];
         }
-
         return $"After {numBlinks} blinks, there are {sum} stones.";
     }
 
@@ -116,6 +93,49 @@ public class Day11 : IDay
         }
 
         return numberedStones;
+    }
+
+    private static Dictionary<long, long> BlinkWithDictionary(Dictionary<long, long> numberToStoneCount)
+    {
+        Dictionary<long, long> newDictionary = [];
+
+        foreach (var stoneNum in numberToStoneCount.Keys)
+        {
+            if (stoneNum == 0)
+            {
+                if (!newDictionary.ContainsKey(1))
+                {
+                    newDictionary[1] = 0;
+                }
+                newDictionary[1] = numberToStoneCount[stoneNum];
+            }
+            else if (stoneNum.ToString().Length % 2 == 0)
+            {
+                var stoneNumString = stoneNum.ToString();
+                var leftNum = long.Parse(stoneNumString[..(stoneNumString.Length / 2)]);
+                var rightNum = long.Parse(stoneNumString[(stoneNumString.Length / 2)..]);
+                if (!newDictionary.ContainsKey(leftNum))
+                {
+                    newDictionary[leftNum] = 0;
+                }
+                if (!newDictionary.ContainsKey(rightNum))
+                {
+                    newDictionary[rightNum] = 0;
+                }
+                newDictionary[leftNum] += numberToStoneCount[stoneNum];
+                newDictionary[rightNum] += numberToStoneCount[stoneNum];
+            }
+            else
+            {
+                if (!newDictionary.ContainsKey(stoneNum * 2024))
+                {
+                    newDictionary[stoneNum * 2024] = 0;
+                }
+                newDictionary[stoneNum * 2024] += numberToStoneCount[stoneNum];
+            }
+        }
+
+        return newDictionary;
     }
 
     private static string RockListToString(List<long> numberedStones)
