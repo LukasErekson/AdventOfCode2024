@@ -1,12 +1,12 @@
 using AdventOfCode2024.Solutions._08;
+using InputUtilities;
 
 namespace AdventOfCode2024.Solutions;
 
 public class Day8 : IDay
 {
     private readonly string _inputFilePath;
-    private readonly List<string> _frequencyGrid = [];
-    private readonly Tuple<int, int> _gridDimensions;
+    private readonly int[] _gridDimensions = new int[2];
 
     private Dictionary<char, List<GridPoint>> _frequencyToCoordinates = [];
     private Dictionary<char, HashSet<GridPoint>> _frequencyToNonHarmonicAntinode = [];
@@ -16,7 +16,6 @@ public class Day8 : IDay
     {
         _inputFilePath = inputFileName;
         ProcessInput();
-        _gridDimensions = new Tuple<int, int>(_frequencyGrid.Count, _frequencyGrid[0].Length);
         FindAntinodes();
     }
 
@@ -57,37 +56,26 @@ public class Day8 : IDay
 
     private void ProcessInput()
     {
-        if (File.Exists(_inputFilePath))
+        void processChar(char c, int row, int col)
         {
-            using var streamReader = new StreamReader(_inputFilePath);
-            string? row;
-
-            while ((row = streamReader.ReadLine()) != null)
+            if (c != '.')
             {
-                var rowNumber = _frequencyGrid.Count;
-
-                for (int column = 0; column < row.Length; column++)
-                {
-                    char c = row.ElementAt(column);
-                    if (c != '.')
-                    {
-                        var coordinateList = _frequencyToCoordinates.TryGetValue(c, out var entry) ? entry : [];
-                        coordinateList.Add(new GridPoint(rowNumber, column));
-                        _frequencyToCoordinates[c] = coordinateList;
-                    }
-                }
-
-                _frequencyGrid.Add(row);
+                var coordinateList = _frequencyToCoordinates.TryGetValue(c, out var entry) ? entry : [];
+                coordinateList.Add(new GridPoint(row, col));
+                _frequencyToCoordinates[c] = coordinateList;
             }
         }
+
+        GridInput.ReadByCharAndOutputBoundaries(_inputFilePath, processChar, out _gridDimensions[0], out _gridDimensions[1]);
     }
+
 
     private bool PointWithinBounds(GridPoint point)
     {
         return point.Row >= 0
                && point.Column >= 0
-               && point.Row < _gridDimensions.Item1
-               && point.Column < _gridDimensions.Item2;
+               && point.Row < _gridDimensions[0]
+               && point.Column < _gridDimensions[1];
     }
 
     private void FindAntinodes()

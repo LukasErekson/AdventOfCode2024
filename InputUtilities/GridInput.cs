@@ -3,7 +3,7 @@
 public class GridInput
 {
 
-    public static void ReadIntoGrid(string inputFilePath, Action<char, int, int> processChar, out int row, out int col)
+    public static void ReadByCharAndOutputBoundaries(string inputFilePath, Action<char, int, int> processChar, out int row, out int col)
     {
         row = 0;
         col = 0;
@@ -11,8 +11,8 @@ public class GridInput
         {
             using var streamReader = new StreamReader(inputFilePath);
             int value;
-            int rows = 0;
-            int cols = 0;
+            int currentRow = 0;
+            int currentColumn = 0;
 
             while ((value = streamReader.Read()) != -1)
             {
@@ -23,18 +23,18 @@ public class GridInput
 
                 if (value == '\n')
                 {
-                    rows++;
-                    col = cols;
-                    cols = 0;
+                    currentRow++;
+                    col = currentColumn;
+                    currentColumn = 0;
                     continue;
                 }
 
-                processChar((char)value, rows, cols);
+                processChar((char)value, currentRow, currentColumn);
 
-                cols++;
+                currentColumn++;
             }
 
-            row = rows + 1;
+            row = currentRow + 1;
         }
         else
         {

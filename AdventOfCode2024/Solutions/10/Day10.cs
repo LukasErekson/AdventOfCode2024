@@ -48,47 +48,7 @@ public class Day10 : IDay
             _heightToCoordinates[height - '0'] = coordinateSet;
         }
 
-        GridInput.ReadIntoGrid(_inputFilePath, ProcessChar, out _mapDimensions[0], out _mapDimensions[1]);
-    }
-
-    public void ProcessInput2()
-    {
-        if (File.Exists(_inputFilePath))
-        {
-            using var streamReader = new StreamReader(_inputFilePath);
-            int height;
-            int row = 0;
-            int col = 0;
-
-            while ((height = streamReader.Read()) != -1)
-            {
-                if (height == '\r')
-                {
-                    continue;
-                }
-
-                if (height == '\n')
-                {
-                    row++;
-                    _mapDimensions[1] = col;
-                    col = 0;
-                    continue;
-                }
-
-                _heightToCoordinates.TryGetValue(height - '0', out var coordinateSet);
-                coordinateSet ??= [];
-                coordinateSet.Add(new GridPoint(row, col));
-                _heightToCoordinates[height - '0'] = coordinateSet;
-
-                col++;
-            }
-
-            _mapDimensions[0] = row + 1;
-        }
-        else
-        {
-            Console.WriteLine($"File {_inputFilePath} cannot be found.");
-        }
+        GridInput.ReadByCharAndOutputBoundaries(_inputFilePath, ProcessChar, out _mapDimensions[0], out _mapDimensions[1]);
     }
 
     private int RateTrialHead(GridPoint point, int currentValue = 0)
