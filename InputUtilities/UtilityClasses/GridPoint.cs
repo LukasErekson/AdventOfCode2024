@@ -4,6 +4,18 @@ public class GridPoint(int row, int column) : IEquatable<GridPoint>
 {
     public int Row { get; } = row;
     public int Column { get; } = column;
+    public static readonly List<GridPoint> DirectionsNoDiagonals = [
+        new GridPoint(1, 0), // down 
+        new GridPoint(-1, 0), // up 
+        new GridPoint(0, -1), // left
+        new GridPoint(0, 1), // right
+    ];
+    public static readonly List<GridPoint> DirectionsDiagonals = [
+        new GridPoint(1, 1), // down-right
+        new GridPoint(-1, 1), // up-right 
+        new GridPoint(1, -1), // down-left
+        new GridPoint(-1, -1), // up-left
+    ];
 
     public static GridPoint operator +(GridPoint left, GridPoint right)
     {
@@ -31,6 +43,45 @@ public class GridPoint(int row, int column) : IEquatable<GridPoint>
                && point.Column >= 0
                && point.Row < rows
                && point.Column < cols;
+    }
+
+    public static List<GridPoint> Burst(GridPoint point, bool includeDiagonals = false)
+    {
+        List<GridPoint> burstLocations = [];
+
+        foreach (var direction in DirectionsNoDiagonals)
+        {
+            burstLocations.Add(point + direction);
+        }
+
+        if (includeDiagonals)
+        {
+            burstLocations = [.. burstLocations, .. DiagonalBurst(point)];
+        }
+
+        return burstLocations;
+    }
+
+    public static List<GridPoint> DiagonalBurst(GridPoint point)
+    {
+        List<GridPoint> burstLocations = [];
+
+        foreach (var direction in DirectionsNoDiagonals)
+        {
+            burstLocations.Add(point + direction);
+        }
+
+        return burstLocations;
+    }
+
+    public static List<GridPoint> BurstWithinBounds(GridPoint point, int row, int col, bool includeDiagonals = false)
+    {
+        return Burst(point, includeDiagonals).Where(p => WithinBounds(p, row, col)).ToList();
+    }
+
+    public static List<GridPoint> DiagonalBurstWithinBounds(GridPoint point, int row, int col)
+    {
+        return DiagonalBurst(point).Where(p => WithinBounds(p, row, col)).ToList();
     }
 
     public override string ToString()

@@ -6,18 +6,12 @@ namespace AdventOfCode2024.Solutions;
 
 public class Day12 : IDay
 {
-    private string _inputFilePath;
-    private Dictionary<char, HashSet<GridPoint>> _plantTypeToCoordinates = [];
-    private Dictionary<char, List<HashSet<GridPoint>>> _plantTypeToRegions = [];
+    private readonly string _inputFilePath;
+    private readonly Dictionary<char, HashSet<GridPoint>> _plantTypeToCoordinates = [];
+    private readonly Dictionary<char, List<HashSet<GridPoint>>> _plantTypeToRegions = [];
+    private readonly char[,] _map;
+    private readonly int[] _mapBoundaries = new int[2];
     private HashSet<GridPoint> _unvisitedPoints = [];
-    private char[,] _map;
-    private int[] _mapBoundaries = new int[2];
-    private List<GridPoint> _directions = [
-        new GridPoint(1, 0), // up 
-        new GridPoint(-1, 0), // down 
-        new GridPoint(0, -1), // left
-        new GridPoint(0, 1), // right
-    ];
 
     public Day12(string inputFilePath)
     {
@@ -65,7 +59,6 @@ public class Day12 : IDay
             var coordinateList = _plantTypeToCoordinates.GetValueOrDefault(plant, []);
             coordinateList.Add(new GridPoint(row, col));
             _plantTypeToCoordinates[plant] = coordinateList;
-
             _unvisitedPoints.Add(new GridPoint(row, col));
         }
         GridInput.ReadByCharAndOutputBoundaries(_inputFilePath, processChar, out _mapBoundaries[0], out _mapBoundaries[1]);
@@ -96,22 +89,13 @@ public class Day12 : IDay
             regionsList.Add([.. pointsInSameRegion]);
             _plantTypeToRegions[currentPlant] = regionsList;
         }
-
     }
 
     private List<GridPoint> SamePlantsInBurst(GridPoint point, char plant)
     {
-        List<GridPoint> samePlantsInBurst = [];
-        foreach (var difference in _directions)
-        {
-            var newPoint = point + difference;
-            if (GridPoint.WithinBounds(newPoint, _mapBoundaries[0], _mapBoundaries[1]) && _plantTypeToCoordinates[plant].Contains(newPoint))
-            {
-                samePlantsInBurst.Add(newPoint);
-            }
-        }
-
-        return samePlantsInBurst;
+        return GridPoint.BurstWithinBounds(point, _mapBoundaries[0], _mapBoundaries[1], includeDiagonals: false)
+                        .Where(p => _plantTypeToCoordinates[plant].Contains(p))
+                        .ToList();
     }
     private int PerimeterOfRegion(HashSet<GridPoint> regionCoordinates, char plant)
     {
@@ -128,9 +112,8 @@ public class Day12 : IDay
     {
         var perimeter = 0;
 
-        foreach (var difference in _directions)
+        foreach (var newPoint in GridPoint.Burst(point, includeDiagonals: false))
         {
-            var newPoint = point + difference;
             if (!GridPoint.WithinBounds(newPoint, _mapBoundaries[0], _mapBoundaries[1]) || !_plantTypeToCoordinates[plant].Contains(newPoint))
             {
                 perimeter++;
