@@ -1,5 +1,5 @@
-using AdventOfCode2024.Solutions._08;
 using Utilities.InputUtilities;
+using Utilities.UtilityClasses;
 
 namespace AdventOfCode2024.Solutions;
 

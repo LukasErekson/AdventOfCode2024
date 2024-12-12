@@ -21,7 +21,7 @@ Advent of Code solutions for 2024.
 9. Day 9 ⭐⭐
 10. Day 10 ⭐⭐
 11. Day 11 ⭐⭐
-12. Day 12
+12. Day 12 ⭐
 13. Day 13
 14. Day 14
 15. Day 15

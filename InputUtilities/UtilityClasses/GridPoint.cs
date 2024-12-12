@@ -1,4 +1,4 @@
-namespace AdventOfCode2024.Solutions._08;
+namespace Utilities.UtilityClasses;
 
 public class GridPoint(int row, int column) : IEquatable<GridPoint>
 {
@@ -23,6 +23,14 @@ public class GridPoint(int row, int column) : IEquatable<GridPoint>
     public static bool operator !=(GridPoint left, GridPoint right)
     {
         return left.Row != right.Row || left.Column != right.Column;
+    }
+
+    public static bool WithinBounds(GridPoint point, int rows, int cols)
+    {
+        return point.Row >= 0
+               && point.Column >= 0
+               && point.Row < rows
+               && point.Column < cols;
     }
 
     public override string ToString()
