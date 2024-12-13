@@ -38,6 +38,10 @@ else
     {
         inputFileString = $"./Inputs/{dayNum:00}/sample_input.txt";
     }
+    else if (args.Length == 2)
+    {
+        inputFileString = $"./Inputs/{dayNum:00}/{args[1]}";
+    }
 
     IDay buildDay(int dayNumber)
     {

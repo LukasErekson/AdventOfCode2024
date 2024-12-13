@@ -49,7 +49,19 @@ public class Day12 : IDay
 
     public string PartTwo()
     {
-        throw new NotImplementedException();
+        var sum = 0;
+        foreach (var plant in _plantTypeToRegions.Keys)
+        {
+            foreach (var regionCoordinates in _plantTypeToRegions[plant])
+            {
+                var sides = CountCorners(regionCoordinates, plant);
+                var area = regionCoordinates.Count;
+
+                sum += sides * area;
+            }
+        }
+
+        return $"The sum of the perimeter x area is {sum}.";
     }
 
     private void ProcessInput()
@@ -121,6 +133,53 @@ public class Day12 : IDay
         }
 
         return perimeter;
+    }
+
+    private int CountCorners(HashSet<GridPoint> regionPoints, char plantType)
+    {
+        // A region of only 1 has 4.
+        if (regionPoints.Count == 1)
+        {
+            return 4;
+        }
+
+        var corners = 0;
+
+        foreach (var centerPoint in regionPoints)
+        {
+            var burstLocations = GridPoint.BurstWithinBounds(centerPoint, _mapBoundaries[0], _mapBoundaries[1]).Where(regionPoints.Contains).ToList();
+
+            if (burstLocations.Count == 1)
+            {
+                corners += 2;
+            }
+            else
+            {
+                HashSet<GridPoint> pointsToCheck = [];
+                for (int i = 0; i < burstLocations.Count - 1; i++)
+                {
+                    for (int j = i + 1; j < burstLocations.Count; j++)
+                    {
+                        var newPoint = burstLocations[i] + burstLocations[j] - centerPoint;
+                        if (GridPoint.WithinBounds(newPoint, _mapBoundaries[0], _mapBoundaries[1])
+                            && newPoint != centerPoint)
+                        {
+                            pointsToCheck.Add(newPoint);
+                        }
+                    }
+                }
+
+                // This means we have an L shape; there is always at least 1 corner.
+                if (pointsToCheck.Count == 1)
+                {
+                    corners++;
+                }
+
+                corners += pointsToCheck.Where(p => _map[p.Row, p.Column] != plantType).Count();
+            }
+        }
+
+        return corners;
     }
 
     private void PrintMap()
