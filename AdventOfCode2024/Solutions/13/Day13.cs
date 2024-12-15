@@ -18,7 +18,7 @@ public class Day13 : IDay
 
     public string PartOne()
     {
-        var totalTokens = 0;
+        long totalTokens = 0;
 
         foreach (var clawMachine in _clawMachines)
         {
@@ -53,10 +53,12 @@ public class Day13 : IDay
         {
             try
             {
-                var solution = SolveClawMachinePart2(clawMachine);
+                var oldPrizeLocation = clawMachine.PrizeLocation;
+                clawMachine.PrizeLocation = new GridPoint(oldPrizeLocation.Row + 10000000000000, oldPrizeLocation.Column + 10000000000000);
+                var solution = SolveClawMachine(clawMachine);
 
-                var aPresses = solution[0];
-                var bPresses = solution[1];
+                var aPresses = solution.Row;
+                var bPresses = solution.Column;
 
                 totalTokens += 3 * aPresses + bPresses;
             }
@@ -127,32 +129,7 @@ public class Day13 : IDay
 
         if (IsInteger(solution.At(0)) && IsInteger(solution.At(1)))
         {
-            return new GridPoint((int)Math.Round(solution.At(0)), (int)Math.Round(solution.At(1)));
-        }
-
-        throw new Exception("No Integer solution");
-    }
-
-    private static long[] SolveClawMachinePart2(ClawMachine clawMachine)
-    {
-        var matrixArray = new double[2, 2]
-        {
-            { clawMachine.ButtonA.Row, clawMachine.ButtonB.Row },
-            { clawMachine.ButtonA.Column, clawMachine.ButtonB.Column }
-        };
-        var M = Matrix<double>.Build;
-        var V = Vector<double>.Build;
-
-        var matrix = M.DenseOfArray(matrixArray);
-        var prize = V.DenseOfArray([clawMachine.PrizeLocation.Row + 10000000000000, clawMachine.PrizeLocation.Column + 10000000000000]);
-
-        var matrixInverse = matrix.Inverse();
-
-        var solution = matrixInverse.Multiply(prize);
-
-        if (IsInteger(solution.At(0)) && IsInteger(solution.At(1)))
-        {
-            return [(long)Math.Round(solution.At(0)), (long)Math.Round(solution.At(1))];
+            return new GridPoint((long)Math.Round(solution.At(0)), (long)Math.Round(solution.At(1)));
         }
 
         throw new Exception("No Integer solution");

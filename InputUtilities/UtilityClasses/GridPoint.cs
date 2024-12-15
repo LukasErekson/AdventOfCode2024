@@ -1,9 +1,9 @@
 namespace Utilities.UtilityClasses;
 
-public class GridPoint(int row, int column) : IEquatable<GridPoint>
+public class GridPoint(long row, long column) : IEquatable<GridPoint>
 {
-    public int Row { get; } = row;
-    public int Column { get; } = column;
+    public long Row { get; } = row;
+    public long Column { get; } = column;
     public static readonly List<GridPoint> DirectionsNoDiagonals = [
         new GridPoint(1, 0), // down 
         new GridPoint(-1, 0), // up 
