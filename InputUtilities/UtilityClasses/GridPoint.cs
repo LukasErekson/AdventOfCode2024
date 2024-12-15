@@ -27,6 +27,11 @@ public class GridPoint(long row, long column) : IEquatable<GridPoint>
         return new GridPoint(left.Row - right.Row, left.Column - right.Column);
     }
 
+    public static GridPoint operator *(GridPoint left, long right)
+    {
+        return new GridPoint(left.Row * right, left.Column * right);
+    }
+
     public static bool operator ==(GridPoint left, GridPoint right)
     {
         return left.Row == right.Row && left.Column == right.Column;
