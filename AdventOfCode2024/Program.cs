@@ -63,6 +63,7 @@ else
             12 => new Day12(inputFileString),
             13 => new Day13(inputFileString),
             14 => new Day14(inputFileString),
+            15 => new Day15(inputFileString),
             _ => throw new NotImplementedException($"Day {dayNumber} is not implemented yet!"),
         };
     }
