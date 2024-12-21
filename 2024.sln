@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode2024", "AdventOfCode2024\AdventOfCode2024.csproj", "{CDE6FAFC-FB65-4A81-BE2D-F250169481B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputUtilities", "InputUtilities\InputUtilities.csproj", "{972D3A47-70A8-4521-892C-A85809B9A234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{972D3A47-70A8-4521-892C-A85809B9A234}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
