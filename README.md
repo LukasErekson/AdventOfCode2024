@@ -32,6 +32,6 @@ Advent of Code solutions for 2024.
 20. Day 20
 21. Day 21
 22. Day 22
-23. Day 23
+23. Day 23 ⭐
 24. Day 24
 25. Day 25
